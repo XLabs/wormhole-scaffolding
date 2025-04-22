@@ -287,6 +287,11 @@ impl Discriminator for SequenceTracker {
 }
 
 #[cfg(feature = "idl-build")]
+impl Discriminator for PostedVaaData {
+    const DISCRIMINATOR: &'static [u8] = &[1];
+}
+
+#[cfg(feature = "idl-build")]
 impl<T: AnchorSerialize + AnchorDeserialize> Discriminator for PostedVaa<T> {
     const DISCRIMINATOR: &'static [u8] = &[];
 }
