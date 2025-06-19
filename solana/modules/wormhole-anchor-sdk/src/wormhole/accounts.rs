@@ -176,8 +176,19 @@ impl PostedVaaData {
 }
 
 impl AccountDeserialize for PostedVaaData {
+    fn try_deserialize(buf: &mut &[u8]) -> Result<Self> {
+        require!(buf.len() >= 3, ErrorCode::AccountDiscriminatorNotFound);
+        let given_disc = &buf[..3];
+        require!(
+            *given_disc == *b"vaa",
+            ErrorCode::AccountDiscriminatorMismatch
+        );
+        Self::try_deserialize_unchecked(buf)
+    }
+
     fn try_deserialize_unchecked(buf: &mut &[u8]) -> Result<Self> {
-        Self::deserialize(buf).map_err(Into::into)
+        let mut data: &[u8] = &buf[3..];
+        Self::deserialize(&mut data).map_err(Into::into)
     }
 }
 
